@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.entity.audit.UserDateAudit;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,11 @@ import javax.persistence.*;
 @Table(name = "product")
 @Getter
 @Setter
-public class Product extends BaseEntity {
+public class Product extends UserDateAudit {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "slug")
     private String slug;

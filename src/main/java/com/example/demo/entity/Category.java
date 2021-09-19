@@ -1,12 +1,10 @@
 package com.example.demo.entity;
 
+import com.example.demo.entity.audit.UserDateAudit;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +12,19 @@ import java.util.List;
 @Table(name = "category")
 @Getter
 @Setter
-public class Category extends BaseEntity {
+public class Category extends UserDateAudit {
 
     @Column(name = "slug")
     private String slug;
 
     @Column(name = "name")
     private String name;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+
 
 //    @OneToMany(mappedBy = "category")
 //    private List<Product> products = new ArrayList<>();
