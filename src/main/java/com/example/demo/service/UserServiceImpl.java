@@ -26,8 +26,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-
-
 	@Autowired
 	private RoleRepository roleRepository;
 
@@ -90,6 +88,7 @@ public class UserServiceImpl implements UserService {
 			user.setFirstName(newUser.getFirstName());
 			user.setLastName(newUser.getLastName());
 			user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+			user.setUsername(newUser.getUsername());
 
 			return userRepository.save(user);
 

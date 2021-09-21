@@ -5,6 +5,7 @@ import com.example.demo.dto.respose.ProductResponseDTO;
 import com.example.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,6 +18,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<String> createProduct(@RequestBody @Valid ProductDTO productDTO) {
         return ResponseEntity.status(201).body(productService.saveProduct(productDTO));
     }
