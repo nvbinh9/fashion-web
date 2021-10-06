@@ -1,20 +1,37 @@
 package com.example.demo.dto.respose;
 
-import com.example.demo.dto.BaseDTO;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.audit.UserDateAudit;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-public class ProductResponseDTO extends UserDateAudit {
+public class ProductResponseDTO  {
+    private int id;
     private String title;
     private String content;
     private String shortDescription;
     private String thumbnail;
     private String slug;
-    private Category category;
+    private CategoryResponse category;
     private String size;
     private String price;
+
+    @JsonProperty("create_by")
+    private CreateBy createBy;
+
+    @JsonProperty("create_at")
+    private LocalDateTime createAt;
+
+    @JsonProperty("update_at")
+    private LocalDateTime updateAt;
+
+    @JsonProperty("update_by")
+    private UpdateBy updateBy;
+
 }

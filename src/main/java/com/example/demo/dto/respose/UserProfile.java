@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public class UserProfile {
 	private String username;
 	private String firstName;
 	private String lastName;
-	private Instant joinedAt;
+	private LocalDateTime joinedAt;
 	private String email;
 //	private Address address;
 //	private String phone;
