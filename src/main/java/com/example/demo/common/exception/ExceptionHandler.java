@@ -37,4 +37,10 @@ public class ExceptionHandler {
     public ErrorsMessage handlerNotFoundIdException(NotFoundIdException exception, WebRequest webRequest) {
         return new ErrorsMessage(HttpStatus.NOT_FOUND, exception.getMessage());
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorsMessage handlerAccessDeniedException(UnauthorizedException accessDeniedException) {
+        return new ErrorsMessage(HttpStatus.NOT_FOUND, accessDeniedException.getMessage());
+    }
 }

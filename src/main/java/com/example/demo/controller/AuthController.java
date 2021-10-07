@@ -7,11 +7,14 @@ import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.request.SignUpRequest;
 import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.dto.respose.JwtAuthenticationResponse;
+import com.example.demo.entity.JwtToken;
 import com.example.demo.entity.User;
 import com.example.demo.entity.role.Role;
 import com.example.demo.entity.role.RoleName;
+import com.example.demo.repository.JwtTokenRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtAuthenticationFilter;
 import com.example.demo.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
@@ -52,6 +56,12 @@ public class AuthController {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
+	@Autowired
+	private JwtTokenRepository jwtTokenRepository;
+
+//	@Autowired
+//	private JwtAuthenticationFilter jwtAuthenticationFilter;
+
 	@PostMapping("/signin")
 	public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
@@ -60,7 +70,16 @@ public class AuthController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		String jwt = jwtTokenProvider.generateToken(authentication);
+		Long userid = jwtTokenProvider.getUserIdFromJWT(jwt);
+
+		JwtToken token = new JwtToken();
+		token.setToken(jwt);
+		token.setUserid(userid);
+		token.activate();
+		jwtTokenRepository.save(token);
+
 		return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+
 	}
 
 	@PostMapping("/signup")
@@ -106,4 +125,6 @@ public class AuthController {
 
 		return ResponseEntity.created(location).body(new ApiResponse(Boolean.TRUE, "User registered successfully"));
 	}
+
+
 }

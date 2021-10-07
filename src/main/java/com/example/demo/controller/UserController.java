@@ -5,8 +5,11 @@ import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.dto.respose.UserIdentityAvailability;
 import com.example.demo.dto.respose.UserProfile;
 import com.example.demo.dto.respose.UserSummary;
+import com.example.demo.entity.JwtToken;
 import com.example.demo.entity.User;
+import com.example.demo.repository.JwtTokenRepository;
 import com.example.demo.security.CurrentUser;
+import com.example.demo.security.JwtAuthenticationFilter;
 import com.example.demo.security.UserPrincipal;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -22,6 +26,12 @@ import javax.validation.Valid;
 public class UserController {
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+	@Autowired
+	private JwtTokenRepository jwtTokenRepository;
 
 
 	@GetMapping("/me")
@@ -92,6 +102,16 @@ public class UserController {
 		ApiResponse apiResponse = userService.removeAdmin(username);
 
 		return new ResponseEntity< >(apiResponse, HttpStatus.OK);
+	}
+
+	@PostMapping("/logout")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<String> logout(HttpServletRequest request) {
+		String jwt = jwtAuthenticationFilter.getJwtFromRequest(request);
+		JwtToken jwtToken = jwtTokenRepository.findByToken(jwt);
+		jwtToken.deactivate();
+		jwtTokenRepository.save(jwtToken);
+		return ResponseEntity.status(200).body("Logout thanh cong");
 	}
 
 
