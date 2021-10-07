@@ -1,10 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.ProductDTO;
+import com.example.demo.dto.request.ProductRequest;
 import com.example.demo.dto.respose.ProductResponseDTO;
 import com.example.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody @Valid ProductDTO productDTO, HttpServletRequest request) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody @Valid ProductRequest productDTO, HttpServletRequest request) {
         return ResponseEntity.status(201).body(productService.saveProduct(productDTO, request));
     }
 
@@ -31,7 +30,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO>updateProductById(@PathVariable Long id, @RequestBody @Valid ProductDTO productDTO, HttpServletRequest request) {
+    public ResponseEntity<ProductResponseDTO>updateProductById(@PathVariable Long id, @RequestBody @Valid ProductRequest productDTO, HttpServletRequest request) {
         return ResponseEntity.status(200).body(productService.updateProductById(id, productDTO, request));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProductById(@PathVariable Long id) {
+        return ResponseEntity.status(200).body(productService.deleteProductById(id));
+    }
+
+
 }

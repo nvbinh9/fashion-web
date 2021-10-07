@@ -1,12 +1,9 @@
 package com.example.demo.dto.respose;
 
-import com.example.demo.entity.Category;
-import com.example.demo.entity.audit.UserDateAudit;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -18,7 +15,7 @@ public class ProductResponseDTO  {
     private String shortDescription;
     private String thumbnail;
     private String slug;
-    private CategoryResponse category;
+    private CategoryId category;
     private String size;
     private String price;
 

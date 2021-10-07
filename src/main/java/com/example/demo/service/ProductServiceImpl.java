@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.common.exception.NotFoundIdException;
-import com.example.demo.dto.request.ProductDTO;
-import com.example.demo.dto.respose.CategoryResponse;
+import com.example.demo.dto.request.ProductRequest;
+import com.example.demo.dto.respose.CategoryId;
 import com.example.demo.dto.respose.CreateBy;
 import com.example.demo.dto.respose.ProductResponseDTO;
 import com.example.demo.dto.respose.UpdateBy;
@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ProductResponseDTO saveProduct(ProductDTO productDTO, HttpServletRequest request) {
+    public ProductResponseDTO saveProduct(ProductRequest productDTO, HttpServletRequest request) {
         Product product = mapper.map(productDTO, Product.class);
         product.setCategory(categoryRepository.findCategoryBySlug(productDTO.getCategorySlug()));
         productRepository.save(product);
@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
         updateBy.setLastName(user.getLastName());
         updateBy.setId(user.getId());
 
-        CategoryResponse categoryResponse = new CategoryResponse();
+        CategoryId categoryResponse = new CategoryId();
         categoryResponse.setId(product.getCategory().getId());
         categoryResponse.setName(product.getCategory().getName());
         categoryResponse.setSlug(product.getCategory().getSlug());
@@ -88,10 +88,12 @@ public class ProductServiceImpl implements ProductService {
         createdBy.setLastName(user.getLastName());
         createdBy.setId(user.getId());
 
+        User user1 = userRepository.findById(product.getUpdatedBy())
+                .orElseThrow(() -> new NotFoundIdException("User khong ton tai"));
         UpdateBy updateBy = new UpdateBy();
-        updateBy.setFirstName(user.getFirstName());
-        updateBy.setLastName(user.getLastName());
-        updateBy.setId(user.getId());
+        updateBy.setFirstName(user1.getFirstName());
+        updateBy.setLastName(user1.getLastName());
+        updateBy.setId(user1.getId());
 
         ProductResponseDTO productResponseDTO = mapper.map(product, ProductResponseDTO.class);
         productResponseDTO.setUpdateAt(LocalDateTime.now());
@@ -104,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO updateProductById(Long id, ProductDTO productDTO, HttpServletRequest request) {
+    public ProductResponseDTO updateProductById(Long id, ProductRequest productDTO, HttpServletRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundIdException("Sản phẩm không tồn tại"));
 
@@ -139,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
         updateBy.setLastName(user.getLastName());
         updateBy.setId(user.getId());
 
-        CategoryResponse categoryResponse = new CategoryResponse();
+        CategoryId categoryResponse = new CategoryId();
         categoryResponse.setId(product.getCategory().getId());
         categoryResponse.setName(product.getCategory().getName());
         categoryResponse.setSlug(product.getCategory().getSlug());
@@ -152,5 +154,13 @@ public class ProductServiceImpl implements ProductService {
         productResponseDTO.setCategory(categoryResponse);
 
         return productResponseDTO;
+    }
+
+    @Override
+    public String deleteProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundIdException("Sản phẩm không tồn tại."));
+        productRepository.delete(product);
+        return "Xóa sản phẩm thành công.";
     }
 }

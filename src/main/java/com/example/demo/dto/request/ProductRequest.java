@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class ProductDTO {
+public class ProductRequest {
 
     @NotEmpty(message = "Thiếu tên sản phẩm")
     private String title;
