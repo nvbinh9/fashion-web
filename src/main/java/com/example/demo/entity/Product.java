@@ -19,8 +19,8 @@ public class Product extends UserDateAudit {
     @Column(name = "slug")
     private String slug;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "thumbnail")
     private String thumbnail;
@@ -32,7 +32,7 @@ public class Product extends UserDateAudit {
     private String content;
 
     @Column(name = "price")
-    private String price;
+    private int price;
 
     @Column(name = "size")
     private String size;
@@ -40,6 +40,5 @@ public class Product extends UserDateAudit {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
 
 }

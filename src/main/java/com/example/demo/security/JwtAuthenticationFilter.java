@@ -2,7 +2,6 @@ package com.example.demo.security;
 
 import com.example.demo.common.exception.AccessDeniedException;
 import com.example.demo.common.exception.NotFoundIdException;
-import com.example.demo.common.exception.ResourceNotFoundException;
 import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.entity.JwtToken;
 import com.example.demo.entity.User;

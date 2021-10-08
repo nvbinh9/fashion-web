@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @Setter
 public class ProductResponseDTO  {
     private int id;
-    private String title;
+    private String name;
     private String content;
     private String shortDescription;
     private String thumbnail;
     private String slug;
     private CategoryId category;
     private String size;
-    private String price;
+    private int price;
 
     @JsonProperty("create_by")
     private CreateBy createBy;

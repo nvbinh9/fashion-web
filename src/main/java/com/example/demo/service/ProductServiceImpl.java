@@ -115,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
         User user = jwtAuthenticationFilter.getUser(request);
 
         product.setCategory(category);
-        product.setTitle(productDTO.getTitle());
+        product.setName(productDTO.getName());
         product.setContent(productDTO.getContent());
         product.setShortDescription(productDTO.getShortDescription());
         product.setThumbnail(productDTO.getThumbnail());
