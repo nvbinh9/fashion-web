@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.dto.respose.UserIdentityAvailability;
 import com.example.demo.dto.respose.UserProfile;
@@ -26,6 +27,8 @@ public interface UserService {
 	ApiResponse giveAdmin(String username);
 
 	ApiResponse removeAdmin(String username);
+
+	Boolean changePassword(EmailRequest email);
 
 
 }

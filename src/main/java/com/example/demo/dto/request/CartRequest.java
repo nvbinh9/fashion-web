@@ -9,7 +9,6 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 public class CartRequest {
-
     private Long productId;
     private Long quantity;
 }

@@ -10,6 +10,7 @@ import com.example.demo.entity.InformationOrder;
 import com.example.demo.entity.Order;
 import com.example.demo.entity.User;
 import com.example.demo.repository.CartRepository;
+import com.example.demo.repository.InformationOrderRepository;
 import com.example.demo.repository.OrderRepository;
 import com.example.demo.security.JwtAuthenticationFilter;
 import org.modelmapper.ModelMapper;
@@ -35,6 +36,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private InformationOrderRepository informationOrderRepository;
 
 
     @Override

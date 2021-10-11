@@ -18,7 +18,7 @@ public class Order extends UserDateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<InformationOrder> informationOrders;
 
     @Column(name = "price")

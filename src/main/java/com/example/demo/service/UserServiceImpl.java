@@ -3,6 +3,8 @@ package com.example.demo.service;
 
 import com.example.demo.common.exception.*;
 import com.example.demo.common.exception.error.AppException;
+import com.example.demo.dto.request.DataMailDTO;
+import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.dto.respose.UserIdentityAvailability;
 import com.example.demo.dto.respose.UserProfile;
@@ -13,13 +15,17 @@ import com.example.demo.entity.role.RoleName;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.UserPrincipal;
+import com.example.demo.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private MailService mailService;
 
 	@Override
 	public UserSummary getCurrentUser(UserPrincipal currentUser) {
@@ -165,4 +174,28 @@ public class UserServiceImpl implements UserService {
 //		ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to update users profile", HttpStatus.FORBIDDEN);
 //		throw new AccessDeniedException(apiResponse);
 //	}
+
+	@Override
+	public Boolean changePassword(EmailRequest email) {
+		User user = userRepository.findUserByEmail(email.getEmail())
+				.orElseThrow(() -> new NotFoundIdException("user không tồn tại"));
+		String newPassword = "22101999";
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(user);
+		try {
+			DataMailDTO dataMailDTO = new DataMailDTO();
+			dataMailDTO.setTo(user.getEmail());
+			dataMailDTO.setSubject(Const.SEND_MAIL_SUBJECT.CLIENT_REGISTER);
+			Map<String, Object> props = new HashMap<>();
+			props.put("name", user.getFirstName());
+			props.put("username", user.getUsername());
+			props.put("password",newPassword);
+			dataMailDTO.setProps(props);
+			mailService.sendHtmlMail(dataMailDTO,Const.TEMPLATE_FILE_NAME.CLIENT_REGISTER );
+			return true;
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

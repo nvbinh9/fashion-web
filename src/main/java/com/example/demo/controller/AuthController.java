@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.common.exception.error.AppException;
 import com.example.demo.common.exception.BlogapiException;
+import com.example.demo.dto.request.EmailRequest;
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.request.SignUpRequest;
 import com.example.demo.dto.respose.ApiResponse;
@@ -16,6 +17,7 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtAuthenticationFilter;
 import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +60,9 @@ public class AuthController {
 
 	@Autowired
 	private JwtTokenRepository jwtTokenRepository;
+
+	@Autowired
+	private UserService userService;
 
 //	@Autowired
 //	private JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -124,6 +129,11 @@ public class AuthController {
 				.buildAndExpand(result.getId()).toUri();
 
 		return ResponseEntity.created(location).body(new ApiResponse(Boolean.TRUE, "User registered successfully"));
+	}
+
+	@PostMapping("/changePassword")
+	public ResponseEntity<Boolean> changePassword(@RequestBody EmailRequest email) {
+		return ResponseEntity.ok(userService.changePassword(email));
 	}
 
 
