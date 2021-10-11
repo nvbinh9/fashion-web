@@ -22,7 +22,7 @@ public class OrderResponse {
     @JsonProperty("create_at")
     private LocalDateTime createAt;
 
-    private int orderPrice;
+    private String orderPrice;
 
 
 }

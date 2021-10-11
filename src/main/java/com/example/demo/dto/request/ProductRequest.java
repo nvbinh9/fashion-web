@@ -32,5 +32,5 @@ public class ProductRequest {
     @NotEmpty(message = "Thiếu Size")
     private String size;
 
-    private int price;
+    private String price;
 }

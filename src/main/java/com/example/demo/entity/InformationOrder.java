@@ -1,24 +1,30 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.audit.UserDateAudit;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "infomation_order")
 @Getter
 @Setter
-public class Cart  {
+public class InformationOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long productId;
+    @Column(name = "product_name")
     private String productName;
+
+    private String productId;
+
     private String productPrice;
 
+    private Long quantity;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

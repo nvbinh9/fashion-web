@@ -32,7 +32,7 @@ public class Product extends UserDateAudit {
     private String content;
 
     @Column(name = "price")
-    private int price;
+    private String price;
 
     @Column(name = "size")
     private String size;
