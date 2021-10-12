@@ -1,7 +1,9 @@
 package com.example.demo.common.exception;
 
 import com.example.demo.common.exception.error.ErrorsMessage;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,10 +29,10 @@ public class ExceptionHandler {
         return errors;
     }
 
-//    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-//    public ErrorsMessage errorMessage(Exception e, WebRequest request) {
-//        return new ErrorsMessage(HttpStatus.BAD_REQUEST, "Error");
-//    }
+    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
+    public ErrorsMessage errorMessage(Exception e, WebRequest request) {
+        return new ErrorsMessage(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(NotFoundIdException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -40,7 +42,19 @@ public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorsMessage handlerAccessDeniedException(UnauthorizedException accessDeniedException) {
-        return new ErrorsMessage(HttpStatus.NOT_FOUND, accessDeniedException.getMessage());
+    public ErrorsMessage handlerAccessDeniedException(UnauthorizedException exception) {
+        return new ErrorsMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorsMessage handlerExpiredJwtException(ExpiredJwtException e) {
+        return new ErrorsMessage(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorsMessage handlerAuthenticationException(AuthenticationException authenticationException) {
+        return new ErrorsMessage(HttpStatus.NOT_FOUND, authenticationException.getMessage());
     }
 }

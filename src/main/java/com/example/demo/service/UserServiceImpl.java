@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
 	public Boolean changePassword(EmailRequest email) {
 		User user = userRepository.findUserByEmail(email.getEmail())
 				.orElseThrow(() -> new NotFoundIdException("user không tồn tại"));
-		String newPassword = "22101999";
+		String newPassword = "888888";
 		user.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(user);
 		try {

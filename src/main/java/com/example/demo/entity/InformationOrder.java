@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,6 @@ public class InformationOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_name")
     private String productName;
 
     private String productId;
@@ -24,7 +24,7 @@ public class InformationOrder {
 
     private Long quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
+    @ManyToOne(cascade = {CascadeType.ALL},fetch= FetchType.EAGER)
+    @JoinColumn(name = "orders_id")
     private Order order;
 }

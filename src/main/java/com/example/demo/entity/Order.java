@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import com.example.demo.entity.audit.UserDateAudit;
-import com.example.demo.entity.role.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +17,7 @@ public class Order extends UserDateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "order", cascade ={ CascadeType.ALL})
     private List<InformationOrder> informationOrders;
 
     @Column(name = "price")

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +45,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse createOrder(OrderRequest orderRequest, HttpServletRequest request) {
         Order order = new Order();
+        order.setPrice(orderRequest.getPrice());
+
         List<Long> productId = new ArrayList<>();
         orderRequest.getCartRequests().forEach(x -> {
             productId.add(Long.valueOf(x.getProductId()));
         });
-//
+
         List<Cart> carts = new ArrayList<>();
         productId.forEach(p -> {
             carts.add(cartRepository.findCartByProductId(p)
@@ -65,11 +68,9 @@ public class OrderServiceImpl implements OrderService {
             quantityProduct.add(x.getQuantity());
         });
         informationOrders.forEach(p -> {
-            p.setOrder(order);
             p.setQuantity(quantityProduct.get(0));
             quantityProduct.remove(0);
         });
-
 
         User user = jwtAuthenticationFilter.getUser(request);
         CreateBy createBy = new CreateBy();
@@ -77,8 +78,14 @@ public class OrderServiceImpl implements OrderService {
         createBy.setLastName(user.getLastName());
         createBy.setFirstName(user.getFirstName());
 
-        order.setPrice(orderRequest.getPrice());
         order.setInformationOrders(informationOrders);
+        informationOrders.forEach(p -> {
+            p.setOrder(order);
+        });
+//        informationOrders.forEach(p -> {
+//            informationOrderRepository.save(p);
+//        });
+
         orderRepository.save(order);
 
         List<CartResponse> cartResponses = new ArrayList<>();
@@ -92,8 +99,7 @@ public class OrderServiceImpl implements OrderService {
         orderResponse.setCreateAt(LocalDateTime.now());
         orderResponse.setOrderPrice(orderRequest.getPrice());
 
-        carts.forEach(delete -> cartRepository.delete(delete));
-
+//        carts.forEach(delete -> cartRepository.delete(delete));
 
         return orderResponse;
     }

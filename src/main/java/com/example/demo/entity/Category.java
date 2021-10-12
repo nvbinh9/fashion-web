@@ -24,8 +24,4 @@ public class Category extends UserDateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
-//    @OneToMany(mappedBy = "category")
-//    private List<Product> products = new ArrayList<>();
 }
