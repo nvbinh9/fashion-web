@@ -17,8 +17,11 @@ public class Order extends UserDateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "order", cascade ={ CascadeType.ALL})
-    private List<InformationOrder> informationOrders;
+    @Column(name = "productIds")
+    private String productIds;
+
+    @Column(name = "quantityIds")
+    private String quantityIds;
 
     @Column(name = "price")
     private String price;

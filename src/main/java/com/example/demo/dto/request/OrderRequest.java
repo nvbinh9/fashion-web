@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class OrderRequest {
 
-    @JsonProperty("cartRequests")
-    private List<CartRequest> cartRequests;
     private String price;
+    private String productIds;
+    private String quantityIds;
 }

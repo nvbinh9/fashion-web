@@ -9,5 +9,5 @@ public class CartResponse {
 
     private String productName;
     private String productPrice;
-    private String quantity;
+    private Long quantity;
 }

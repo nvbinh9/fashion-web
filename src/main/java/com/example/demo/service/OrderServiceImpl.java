@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -46,30 +47,35 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse createOrder(OrderRequest orderRequest, HttpServletRequest request) {
         Order order = new Order();
         order.setPrice(orderRequest.getPrice());
+        order.setProductIds(orderRequest.getProductIds());
+        order.setQuantityIds(orderRequest.getQuantityIds());
+        orderRepository.save(order);
 
-        List<Long> productId = new ArrayList<>();
-        orderRequest.getCartRequests().forEach(x -> {
-            productId.add(Long.valueOf(x.getProductId()));
+        List<String> productIdString = Arrays.asList(orderRequest.getProductIds().split("-"));
+        List<String> quantityIdString = Arrays.asList(orderRequest.getQuantityIds().split("-"));
+
+        List<Long> productIds = new ArrayList<>();
+        productIdString.forEach(p -> {
+            productIds.add(Long.parseLong(p));
+        });
+        List<Long> quantityIds = new ArrayList<>();
+        quantityIdString.forEach(p -> {
+            quantityIds.add(Long.parseLong(p));
         });
 
         List<Cart> carts = new ArrayList<>();
-        productId.forEach(p -> {
+        productIds.forEach(p -> {
             carts.add(cartRepository.findCartByProductId(p)
-                    .orElseThrow(() -> new NotFoundIdException("Không tìm thấy sản phẩm trong giỏ hàng.")));
+                    .orElseThrow(() -> new NotFoundIdException("Không tìm thấy sản phẩm trong giỏ hàng. ")));
         });
 
-        List<InformationOrder> informationOrders = new ArrayList<>();
+        List<CartResponse> cartResponses = new ArrayList<>();
         carts.forEach(cart -> {
-            informationOrders.add(mapper.map(cart, InformationOrder.class));
+            cartResponses.add(mapper.map(cart, CartResponse.class));
         });
-
-        ArrayList<Long> quantityProduct = new ArrayList<>();
-        orderRequest.getCartRequests().forEach(x -> {
-            quantityProduct.add(x.getQuantity());
-        });
-        informationOrders.forEach(p -> {
-            p.setQuantity(quantityProduct.get(0));
-            quantityProduct.remove(0);
+        cartResponses.forEach(p -> {
+            p.setQuantity(quantityIds.get(0));
+            quantityIds.remove(0);
         });
 
         User user = jwtAuthenticationFilter.getUser(request);
@@ -78,28 +84,14 @@ public class OrderServiceImpl implements OrderService {
         createBy.setLastName(user.getLastName());
         createBy.setFirstName(user.getFirstName());
 
-        order.setInformationOrders(informationOrders);
-        informationOrders.forEach(p -> {
-            p.setOrder(order);
-        });
-//        informationOrders.forEach(p -> {
-//            informationOrderRepository.save(p);
-//        });
-
-        orderRepository.save(order);
-
-        List<CartResponse> cartResponses = new ArrayList<>();
-        informationOrders.forEach(cart -> {
-            cartResponses.add(mapper.map(cart, CartResponse.class));
-        });
-
         OrderResponse orderResponse = new OrderResponse();
         orderResponse.setCartResponse(cartResponses);
         orderResponse.setCreateBy(createBy);
         orderResponse.setCreateAt(LocalDateTime.now());
         orderResponse.setOrderPrice(orderRequest.getPrice());
 
-//        carts.forEach(delete -> cartRepository.delete(delete));
+        carts.forEach(delete -> cartRepository.delete(delete));
+
 
         return orderResponse;
     }
