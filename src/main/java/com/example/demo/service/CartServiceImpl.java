@@ -48,7 +48,7 @@ public class CartServiceImpl implements CartService{
     @Override
     public String deleteProductInCart(Long id) {
         Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new NotFoundIdException("..."));
+                .orElseThrow(() -> new NotFoundIdException("Sản phẩm không tồn tại"));
         cartRepository.delete(cart);
         return "Đã xóa thành công";
     }

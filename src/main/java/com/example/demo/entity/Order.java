@@ -26,4 +26,7 @@ public class Order extends UserDateAudit {
     @Column(name = "price")
     private String price;
 
+    @Column
+    private Boolean active;
+
 }

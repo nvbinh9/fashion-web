@@ -5,10 +5,8 @@ import com.example.demo.dto.respose.OrderResponse;
 import com.example.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,5 +20,12 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest, HttpServletRequest request)  {
         return ResponseEntity.status(201).body(orderService.createOrder(orderRequest, request));
+    }
+
+    @PostMapping("{id}")
+    @PreAuthorize(" hasAdmin('ADMIN')")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long id) {
+        return ResponseEntity.status(200).body(orderService.cancelOrder(id));
+
     }
 }

@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface OrderService {
     OrderResponse createOrder(OrderRequest orderRequest, HttpServletRequest request);
+    String cancelOrder(Long id);
 }

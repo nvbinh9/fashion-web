@@ -2,6 +2,7 @@ package com.example.demo.common.exception;
 
 import com.example.demo.common.exception.error.ErrorsMessage;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
@@ -52,9 +53,9 @@ public class ExceptionHandler {
         return new ErrorsMessage(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(AuthenticationException.class)
+    @org.springframework.web.bind.annotation.ExceptionHandler(SpelEvaluationException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorsMessage handlerAuthenticationException(AuthenticationException authenticationException) {
-        return new ErrorsMessage(HttpStatus.NOT_FOUND, authenticationException.getMessage());
+    public ErrorsMessage handlerAuthenticationException(SpelEvaluationException authenticationException) {
+        return new ErrorsMessage(HttpStatus.NOT_FOUND, "Bạn cần cấp quyền để thực hiện thao tác này.");
     }
 }

@@ -49,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
         order.setPrice(orderRequest.getPrice());
         order.setProductIds(orderRequest.getProductIds());
         order.setQuantityIds(orderRequest.getQuantityIds());
+        order.setActive(true);
         orderRepository.save(order);
 
         List<String> productIdString = Arrays.asList(orderRequest.getProductIds().split("-"));
@@ -94,5 +95,14 @@ public class OrderServiceImpl implements OrderService {
 
 
         return orderResponse;
+    }
+
+    @Override
+    public String cancelOrder(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundIdException("Không tìm thấy đơn hàng"));
+        order.setActive(false);
+        orderRepository.save(order);
+        return "Đã hủy đơn hàng";
     }
 }
