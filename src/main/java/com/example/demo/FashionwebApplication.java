@@ -4,6 +4,7 @@ import com.example.demo.security.JwtAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -16,10 +17,13 @@ import java.util.TimeZone;
 @SpringBootApplication
 @EntityScan(basePackageClasses = { FashionwebApplication.class, Jsr310Converters.class })
 
-public class FashionwebApplication {
+public class FashionwebApplication  {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+//    @Autowired
+//    private RedisTemplate redisTemplate;
 
     public static void main(String[] args) {
         SpringApplication.run(FashionwebApplication.class, args);
@@ -39,4 +43,9 @@ public class FashionwebApplication {
         return new JwtAuthenticationFilter();
     }
 
+//    @Override
+//    public void run(String... args) throws Exception {
+//        redisTemplate.opsForValue().set("nvbinh", "Hello World");
+//        System.out.println("Value of key nvbinh" + redisTemplate.opsForValue().get("nvbinh"));
+//    }
 }

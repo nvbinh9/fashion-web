@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.common.exception.NotFoundIdException;
 import com.example.demo.common.exception.error.AppException;
 import com.example.demo.common.exception.BlogapiException;
 import com.example.demo.dto.request.EmailRequest;
@@ -8,6 +9,7 @@ import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.request.SignUpRequest;
 import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.dto.respose.JwtAuthenticationResponse;
+import com.example.demo.dto.respose.UserProfile;
 import com.example.demo.entity.JwtToken;
 import com.example.demo.entity.User;
 import com.example.demo.entity.role.Role;
@@ -18,7 +20,10 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtAuthenticationFilter;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,8 +45,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
+@Slf4j
 public class AuthController {
 	private static final String USER_ROLE_NOT_SET = "User role not set";
+	private static final String KEY = "USER";
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -64,8 +71,12 @@ public class AuthController {
 	@Autowired
 	private UserService userService;
 
-//	@Autowired
-//	private JwtAuthenticationFilter jwtAuthenticationFilter;
+	@Autowired
+	private RedisTemplate redisTemplate;
+
+	@Autowired
+	private ModelMapper mapper;
+
 
 	@PostMapping("/signin")
 	public ResponseEntity<JwtAuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -90,11 +101,11 @@ public class AuthController {
 	@PostMapping("/signup")
 	public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
 		if (Boolean.TRUE.equals(userRepository.existsByUsername(signUpRequest.getUsername()))) {
-			throw new BlogapiException(HttpStatus.BAD_REQUEST, "Username is already taken");
+			throw new BlogapiException(HttpStatus.BAD_REQUEST, "Username đã tồn tại");
 		}
 
 		if (Boolean.TRUE.equals(userRepository.existsByEmail(signUpRequest.getEmail()))) {
-			throw new BlogapiException(HttpStatus.BAD_REQUEST, "Email is already taken");
+			throw new BlogapiException(HttpStatus.BAD_REQUEST, "Email đã tồn tại.");
 		}
 
 		String firstName = signUpRequest.getFirstName().toLowerCase();
@@ -128,7 +139,17 @@ public class AuthController {
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users/{userId}")
 				.buildAndExpand(result.getId()).toUri();
 
-		return ResponseEntity.created(location).body(new ApiResponse(Boolean.TRUE, "User registered successfully"));
+		// save cache server(redis):
+		try {
+			UserProfile userProfile = mapper.map(user, UserProfile.class);
+			redisTemplate.opsForHash().put(KEY, userProfile.getId(), userProfile);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
+
+
+
+		return ResponseEntity.created(location).body(new ApiResponse(Boolean.TRUE, "Đăng ký thành công."));
 	}
 
 	@PostMapping("/changePassword")

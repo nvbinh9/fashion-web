@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.request.EmailRequest;
+import com.example.demo.dto.request.SendMailAllRequest;
 import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.dto.respose.UserIdentityAvailability;
 import com.example.demo.dto.respose.UserProfile;
@@ -22,13 +23,15 @@ public interface UserService {
 
 	User updateUser(User newUser, String username, UserPrincipal currentUser);
 
-	ApiResponse deleteUser(String username, UserPrincipal currentUser);
+	ApiResponse deleteUser(String username);
 
 	ApiResponse giveAdmin(String username);
 
 	ApiResponse removeAdmin(String username);
 
 	Boolean changePassword(EmailRequest email);
+
+	Boolean sendMailAll(SendMailAllRequest sendMailAllRequest);
 
 
 }

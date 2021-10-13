@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.dto.request.SendMailAllRequest;
 import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.dto.respose.UserIdentityAvailability;
 import com.example.demo.dto.respose.UserProfile;
@@ -80,10 +81,9 @@ public class UserController {
 	}
 
 	@DeleteMapping("/{username}")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public ResponseEntity<ApiResponse> deleteUser(@PathVariable(value = "username") String username,
-												  @CurrentUser UserPrincipal currentUser) {
-		ApiResponse apiResponse = userService.deleteUser(username, currentUser);
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<ApiResponse> deleteUser(@PathVariable(value = "username") String username) {
+		ApiResponse apiResponse = userService.deleteUser(username);
 
 		return new ResponseEntity< >(apiResponse, HttpStatus.OK);
 	}
@@ -111,8 +111,15 @@ public class UserController {
 		JwtToken jwtToken = jwtTokenRepository.findByToken(jwt);
 		jwtToken.deactivate();
 		jwtTokenRepository.save(jwtToken);
-		return ResponseEntity.status(200).body("Logout thanh cong");
+		return ResponseEntity.status(200).body("Logout thành công");
 	}
+
+	@PostMapping("/sendMailAll")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Boolean> sendMailAll(@RequestBody SendMailAllRequest sendMailAllRequest) {
+		return  ResponseEntity.ok(userService.sendMailAll(sendMailAllRequest));
+	}
+
 
 
 

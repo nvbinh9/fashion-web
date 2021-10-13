@@ -5,6 +5,7 @@ import com.example.demo.common.exception.*;
 import com.example.demo.common.exception.error.AppException;
 import com.example.demo.dto.request.DataMailDTO;
 import com.example.demo.dto.request.EmailRequest;
+import com.example.demo.dto.request.SendMailAllRequest;
 import com.example.demo.dto.respose.ApiResponse;
 import com.example.demo.dto.respose.UserIdentityAvailability;
 import com.example.demo.dto.respose.UserProfile;
@@ -17,6 +18,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.security.UserPrincipal;
 import com.example.demo.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private MailService mailService;
+
+	@Autowired
+	private RedisTemplate redisTemplate;
 
 	@Override
 	public UserSummary getCurrentUser(UserPrincipal currentUser) {
@@ -109,14 +114,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ApiResponse deleteUser(String username, UserPrincipal currentUser) {
+	public ApiResponse deleteUser(String username) {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("User", "id", username));
-		if (!user.getId().equals(currentUser.getId()) || !currentUser.getAuthorities()
-				.contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
-			ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to delete profile of: " + username);
-			throw new AccessDeniedException(apiResponse);
-		}
+//		if (!user.getId().equals(currentUser.getId()) || !currentUser.getAuthorities()
+//				.contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.toString()))) {
+//			ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to delete profile of: " + username);
+//			throw new AccessDeniedException(apiResponse);
+//		}
 
 		userRepository.deleteById(user.getId());
 
@@ -198,4 +203,30 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
+
+	@Override
+	public Boolean sendMailAll(SendMailAllRequest sendMailAllRequest) {
+
+		List<UserProfile> users = redisTemplate.opsForHash().values("USER");
+		for(UserProfile user : users) {
+			try {
+				DataMailDTO dataMailDTO = new DataMailDTO();
+				dataMailDTO.setTo(user.getEmail());
+				dataMailDTO.setSubject(sendMailAllRequest.getSendMailSubject());
+				Map<String, Object> props = new HashMap<>();
+				props.put("name", user.getFirstName());
+				props.put("username", user.getUsername());
+				props.put("email",user.getEmail());
+				props.put("createdAt", user.getCreatedAt());
+				dataMailDTO.setProps(props);
+				mailService.sendHtmlMail(dataMailDTO,sendMailAllRequest.getTemplateFileName() );
+				return true;
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+
 }

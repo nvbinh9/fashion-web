@@ -23,7 +23,7 @@ public class OrderController {
     }
 
     @PostMapping("{id}")
-    @PreAuthorize(" hasAdmin('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
     public ResponseEntity<String> cancelOrder(@PathVariable Long id) {
         return ResponseEntity.status(200).body(orderService.cancelOrder(id));
 

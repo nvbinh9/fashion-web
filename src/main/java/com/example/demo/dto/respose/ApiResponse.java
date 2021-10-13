@@ -13,7 +13,7 @@ import java.io.Serializable;
 		"success",
 		"message"
 })
-public class ApiResponse extends Throwable implements Serializable {
+public class ApiResponse implements Serializable {
 
 	@JsonIgnore
 	private static final long serialVersionUID = 7702134516418120340L;
