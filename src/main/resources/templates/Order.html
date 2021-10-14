@@ -11,13 +11,21 @@
     </style>
 </head>
 <body>
-<h2>Đây là file test</h2>
 <p th:text="${'Xin chào, ' + name}"></p>
-<p> Chúng tôi gửi thông tin truy cập hệ thống của bạn: </p>
-<p th:text="${'- Tên truy cập: ' + username}"></p>
-<p th:text="${'- Email đăng ký : ' + email}"></p>
-<p th:text="${'- Ngày đăng ký hệ thống : ' + createdAt}"></p>
+<p> Hóa đơn mua hàng: </p>
+<p th:text="${'- Giá đơn hàng: ' + price}"></p>
 
+<p>---</p>
+
+<p th:text="${'- Tên sản phẩm : ' + name1}"></p>
+<p th:text="${'- Giá sản phẩm : ' + price1}"></p>
+<p th:text="${'-Số lượng : ' + quantity1}"></p>
+
+<p>---</p>
+
+<p th:text="${'- Tên sản phẩm : ' + name2}"></p>
+<p th:text="${'- Giá sản phẩm : ' + price2}"></p>
+<p th:text="${'-Số lượng : ' + quantity2}"></p>
 
 <p>Đây là email tự động vui lòng không trả lời.</p>
 </body>

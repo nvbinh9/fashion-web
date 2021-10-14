@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,6 +18,7 @@ public class UserProfile implements Serializable {
 	private String username;
 	private String firstName;
 	private String lastName;
-	private LocalDateTime createdAt;
+	private LocalDate createdAt;
 	private String email;
+
 }

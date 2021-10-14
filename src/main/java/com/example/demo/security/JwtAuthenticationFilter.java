@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             JwtToken jwtToken = jwtTokenRepository.findByToken(jwt);
             if(jwtToken != null) {
                 Boolean jwtActivate = jwtToken.getActive();
-                ApiResponse apiResponse = new ApiResponse(Boolean.TRUE, "Phiên đăng nhập đã hết hạn");
+                ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "Phiên đăng nhập đã hết hạn");
                 if (jwtActivate == false) throw new AccessDeniedException(apiResponse);
             }
 

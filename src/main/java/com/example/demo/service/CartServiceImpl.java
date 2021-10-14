@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.common.exception.NotFoundIdException;
 import com.example.demo.dto.request.CartRequest;
-import com.example.demo.dto.respose.CartResponse;
 import com.example.demo.entity.Cart;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.CartRepository;
@@ -32,8 +31,8 @@ public class CartServiceImpl implements CartService{
 
         Cart cart = new Cart();
         cart.setProductId(product.getId());
-        cart.setProductName(product.getName());
-        cart.setProductPrice(product.getPrice());
+        cart.setProductName(product.getProductName());
+        cart.setProductPrice(product.getProductPrice());
         cartRepository.save(cart);
 
         return cart;

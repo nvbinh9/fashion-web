@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.common.exception.NotFoundIdException;
 import com.example.demo.dto.request.CategoryRequest;
-import com.example.demo.dto.respose.CategoryId;
 import com.example.demo.dto.respose.CategoryResponse;
 import com.example.demo.dto.respose.CreateBy;
 import com.example.demo.dto.respose.UpdateBy;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -51,8 +51,8 @@ public class CategoryServiceImpl implements CategoryService{
         updateBy.setId(user.getId());
 
         CategoryResponse categoryResponse = mapper.map(category, CategoryResponse.class);
-        categoryResponse.setUpdateAt(LocalDateTime.now());
-        categoryResponse.setCreateAt(LocalDateTime.now());
+        categoryResponse.setUpdateAt(LocalDate.now());
+        categoryResponse.setCreateAt(LocalDate.now());
         categoryResponse.setCreateBy(createBy);
         categoryResponse.setUpdateBy(updateBy);
 
@@ -100,7 +100,7 @@ public class CategoryServiceImpl implements CategoryService{
         category.setName(categoryRequest.getName());
         category.setSlug(categoryRequest.getSlug());
         category.setUpdatedBy(userUpdateCategory.getId());
-        category.setUpdatedAt(LocalDateTime.now());
+        category.setUpdatedAt(LocalDate.now());
         categoryRepository.save(category);
 
         CreateBy createBy = new CreateBy();
@@ -114,7 +114,7 @@ public class CategoryServiceImpl implements CategoryService{
         updateBy.setId(userUpdateCategory.getId());
 
         CategoryResponse categoryResponse = mapper.map(category, CategoryResponse.class);
-        categoryResponse.setUpdateAt(LocalDateTime.now());
+        categoryResponse.setUpdateAt(LocalDate.now());
         categoryResponse.setUpdateBy(updateBy);
         categoryResponse.setCreateAt(category.getCreatedAt());
         categoryResponse.setCreateBy(createBy);

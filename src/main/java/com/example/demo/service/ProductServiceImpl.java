@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -67,8 +68,8 @@ public class ProductServiceImpl implements ProductService {
         productResponseDTO.setCreateBy(createdBy);
         productResponseDTO.setCategory(categoryResponse);
         productResponseDTO.setUpdateBy(updateBy);
-        productResponseDTO.setCreateAt(LocalDateTime.now());
-        productResponseDTO.setUpdateAt(LocalDateTime.now());
+        productResponseDTO.setCreateAt(LocalDate.now());
+        productResponseDTO.setUpdateAt(LocalDate.now());
 
         return productResponseDTO;
     }
@@ -96,8 +97,8 @@ public class ProductServiceImpl implements ProductService {
         updateBy.setId(user1.getId());
 
         ProductResponseDTO productResponseDTO = mapper.map(product, ProductResponseDTO.class);
-        productResponseDTO.setUpdateAt(LocalDateTime.now());
-        productResponseDTO.setCreateAt(LocalDateTime.now());
+        productResponseDTO.setUpdateAt(LocalDate.now());
+        productResponseDTO.setCreateAt(LocalDate.now());
         productResponseDTO.setUpdateBy(updateBy);
         productResponseDTO.setCreateBy(createdBy);
 
@@ -115,15 +116,15 @@ public class ProductServiceImpl implements ProductService {
         User user = jwtAuthenticationFilter.getUser(request);
 
         product.setCategory(category);
-        product.setName(productDTO.getName());
+        product.setProductName(productDTO.getName());
         product.setContent(productDTO.getContent());
         product.setShortDescription(productDTO.getShortDescription());
         product.setThumbnail(productDTO.getThumbnail());
         product.setSlug(productDTO.getSlug());
         product.setSize(productDTO.getSize());
-        product.setPrice(productDTO.getPrice());
+        product.setProductPrice(productDTO.getPrice());
         product.setUpdatedBy(user.getId());
-        product.setUpdatedAt(LocalDateTime.now());
+        product.setUpdatedAt(LocalDate.now());
 
         productRepository.save(product);
 
@@ -147,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
         categoryResponse.setSlug(product.getCategory().getSlug());
 
         ProductResponseDTO productResponseDTO = mapper.map(product, ProductResponseDTO.class);
-        productResponseDTO.setUpdateAt(LocalDateTime.now());
+        productResponseDTO.setUpdateAt(LocalDate.now());
         productResponseDTO.setCreateAt(product.getCreatedAt());
         productResponseDTO.setUpdateBy(updateBy);
         productResponseDTO.setCreateBy(createdBy);
