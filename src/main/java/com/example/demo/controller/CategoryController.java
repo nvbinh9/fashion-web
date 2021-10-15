@@ -16,28 +16,28 @@ import javax.validation.Valid;
 public class CategoryController {
 
     @Autowired
-    CategoryService categoryService;
+     private CategoryService categoryService;
 
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryResponse> saveCategory(@RequestBody @Valid CategoryRequest categoryRequest, HttpServletRequest request) {
         return ResponseEntity.status(201).body(categoryService.saveCategory(categoryRequest, request));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
         return ResponseEntity.status(200).body(categoryService.getCategoryById(id));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryResponse> updateCategoryById(@PathVariable Long id, @RequestBody @Valid CategoryRequest categoryRequest, HttpServletRequest request) {
         return ResponseEntity.status(201).body(categoryService.updateCategoryById(categoryRequest, request, id));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteCategoryById(@PathVariable Long id) {
         return ResponseEntity.status(200).body(categoryService.deleteCategoryById(id));
     }

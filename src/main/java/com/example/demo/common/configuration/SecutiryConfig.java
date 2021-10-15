@@ -53,7 +53,6 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers(HttpMethod.GET, "/api/**").permitAll()
 				.antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-				.antMatchers("/logout").permitAll()
 				.antMatchers(HttpMethod.GET, "/api/users/checkUsernameAvailability", "/api/users/checkEmailAvailability").permitAll()
 				.anyRequest().authenticated();
 

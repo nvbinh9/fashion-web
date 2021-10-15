@@ -54,9 +54,9 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(SpelEvaluationException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorsMessage handlerAuthenticationException(SpelEvaluationException authenticationException) {
-        return new ErrorsMessage(HttpStatus.NOT_FOUND, "Bạn cần cấp quyền để thực hiện thao tác này.");
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public ErrorsMessage handlerAuthenticationException(SpelEvaluationException e) {
+        return new ErrorsMessage(HttpStatus.NOT_FOUND, "Bạn cần cấp quyền để thực hiện thao tác này: " + e.getMessage());
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(BlogapiException.class)

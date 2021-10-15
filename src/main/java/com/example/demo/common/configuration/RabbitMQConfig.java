@@ -15,18 +15,18 @@ public class RabbitMQConfig {
     public static final String EXCHANGE = "message_exchange";
     public static final String ROUTING_KEY = "message_routingKey";
 
-    @Bean(name = "queue1")
+    @Bean
     public Queue queue() {
-        return new Queue(QUEUE, false);
+        return new Queue(QUEUE);
     }
 
-    @Bean(name = "exchange1")
+    @Bean
     public TopicExchange exchange() {
         return new TopicExchange(EXCHANGE);
     }
 
     @Bean
-    public Binding binding(@Qualifier("queue1") Queue queue, @Qualifier("exchange1") TopicExchange exchange) {
+    public Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
     }
 

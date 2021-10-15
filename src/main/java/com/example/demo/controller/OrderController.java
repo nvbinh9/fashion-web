@@ -28,14 +28,14 @@ public class OrderController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<String> cancelOrder(@PathVariable Long id) {
         return ResponseEntity.status(200).body(orderService.cancelOrder(id));
 
     }
 
     @PostMapping("/publish/{id}")
-    @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long id) {
         OrderResponse orderResponse = orderService.getOrderById(id);
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.ROUTING_KEY, orderResponse);

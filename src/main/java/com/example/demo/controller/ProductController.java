@@ -19,7 +19,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasAdmin('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody @Valid ProductRequest productDTO, HttpServletRequest request) {
         return ResponseEntity.status(201).body(productService.saveProduct(productDTO, request));
     }
