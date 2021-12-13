@@ -30,10 +30,10 @@ public class ExceptionHandler {
         return errors;
     }
 
-//    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-//    public ErrorsMessage errorMessage(Exception e, WebRequest request) {
-//        return new ErrorsMessage(HttpStatus.BAD_REQUEST, e.getMessage());
-//    }
+    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
+    public ErrorsMessage errorMessage(Exception e, WebRequest request) {
+        return new ErrorsMessage(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(NotFoundIdException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

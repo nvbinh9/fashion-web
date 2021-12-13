@@ -7,7 +7,7 @@ import com.example.demo.entity.Cart;
 import javax.validation.Valid;
 import java.util.List;
 
-public interface CartService {
+public interface CartService  {
     Cart addProduct(CartRequest cartRequest);
     List<Cart> getAllProductInCart();
     String deleteProductInCart(Long id);

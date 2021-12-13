@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.entity.Order;
 import com.example.demo.security.JwtAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -12,12 +13,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.convert.Jsr310Converters;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicReference;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = { FashionwebApplication.class, Jsr310Converters.class })
 
-public class FashionwebApplication  {
+public class FashionwebApplication implements CommandLineRunner  {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -41,6 +45,15 @@ public class FashionwebApplication  {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        HashMap<String, AtomicReference> map = new HashMap(){{
+            put("Value", new AtomicReference<Map<String, Order>>(new HashMap<>()));
+        }};
+        System.out.println("Start!!!");
+        System.out.println(map.get("Value"));
     }
 
 //    @Override
