@@ -147,8 +147,6 @@ public class AuthController {
 			log.error(e.getMessage());
 		}
 
-
-
 		return ResponseEntity.created(location).body(new ApiResponse(Boolean.TRUE, "Đăng ký thành công."));
 	}
 
